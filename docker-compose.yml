@@ -1,0 +1,134 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: social_rabbitmq
+    ports:
+      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:?RABBITMQ_DEFAULT_USER is required}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:?RABBITMQ_DEFAULT_PASS is required}
+
+  api-gateway:
+    build: ./backend/api-gateway
+    container_name: social_gateway
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173}
+    depends_on:
+      - user-service
+      - post-service
+
+  user-service:
+    build: ./backend/user-service
+    container_name: social_user_service
+    environment:
+      PORT: 3001
+      DB_HOST: ${DB_HOST:?DB_HOST is required}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:?DB_USER is required}
+      DB_PASS: ${DB_PASS:?DB_PASS is required}
+      DB_NAME: ${DB_NAME:?DB_NAME is required}
+      DB_SSL: ${DB_SSL:-true}
+      DB_SSL_REJECT_UNAUTHORIZED: ${DB_SSL_REJECT_UNAUTHORIZED:-false}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:?RABBITMQ_DEFAULT_USER is required}:${RABBITMQ_DEFAULT_PASS:?RABBITMQ_DEFAULT_PASS is required}@rabbitmq:5672
+      GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/gcs_key
+      GCS_BUCKET_NAME: ${GCS_BUCKET_NAME:?GCS_BUCKET_NAME is required}
+      JSON_BODY_LIMIT: ${JSON_BODY_LIMIT:-1mb}
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-5242880}
+    secrets:
+      - gcs_key
+    depends_on:
+      rabbitmq:
+        condition: service_started
+
+  post-service:
+    build: ./backend/post-service
+    container_name: social_post_service
+    environment:
+      PORT: 3002
+      DB_HOST: ${DB_HOST:?DB_HOST is required}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:?DB_USER is required}
+      DB_PASS: ${DB_PASS:?DB_PASS is required}
+      DB_NAME: ${DB_NAME:?DB_NAME is required}
+      DB_SSL: ${DB_SSL:-true}
+      DB_SSL_REJECT_UNAUTHORIZED: ${DB_SSL_REJECT_UNAUTHORIZED:-false}
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:?RABBITMQ_DEFAULT_USER is required}:${RABBITMQ_DEFAULT_PASS:?RABBITMQ_DEFAULT_PASS is required}@rabbitmq:5672
+      GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/gcs_key
+      GCS_BUCKET_NAME: ${GCS_BUCKET_NAME:?GCS_BUCKET_NAME is required}
+      JSON_BODY_LIMIT: ${JSON_BODY_LIMIT:-1mb}
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-5242880}
+    secrets:
+      - gcs_key
+    depends_on:
+      rabbitmq:
+        condition: service_started
+
+  comment-service:
+    build: ./backend/comment-service
+    container_name: social_comment_service
+    environment:
+      PORT: 3003
+      DB_HOST: ${DB_HOST:?DB_HOST is required}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:?DB_USER is required}
+      DB_PASS: ${DB_PASS:?DB_PASS is required}
+      DB_NAME: ${DB_NAME:?DB_NAME is required}
+      DB_SSL: ${DB_SSL:-true}
+      DB_SSL_REJECT_UNAUTHORIZED: ${DB_SSL_REJECT_UNAUTHORIZED:-false}
+      JSON_BODY_LIMIT: ${JSON_BODY_LIMIT:-1mb}
+
+  frontend:
+    build: ./frontend
+    container_name: social_frontend
+    ports:
+      - "127.0.0.1:5173:5173"
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:3000/api}
+      VITE_SOCKET_URL: ${VITE_SOCKET_URL:-http://localhost:3000}
+    depends_on:
+      - api-gateway
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  notification-service:
+    build: ./backend/notification-service
+    container_name: social_notification_service
+    environment:
+      PORT: 3005
+      DB_HOST: ${DB_HOST:?DB_HOST is required}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:?DB_USER is required}
+      DB_PASS: ${DB_PASS:?DB_PASS is required}
+      DB_NAME: ${DB_NAME:?DB_NAME is required}
+      DB_SSL: ${DB_SSL:-true}
+      DB_SSL_REJECT_UNAUTHORIZED: ${DB_SSL_REJECT_UNAUTHORIZED:-false}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:?RABBITMQ_DEFAULT_USER is required}:${RABBITMQ_DEFAULT_PASS:?RABBITMQ_DEFAULT_PASS is required}@rabbitmq:5672
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173}
+      JSON_BODY_LIMIT: ${JSON_BODY_LIMIT:-1mb}
+    depends_on:
+      rabbitmq:
+        condition: service_started
+
+  feed-service:
+    build: ./backend/feed-service
+    container_name: social_feed_service
+    environment:
+      PORT: 3004
+      RABBITMQ_URL: amqp://${RABBITMQ_DEFAULT_USER:?RABBITMQ_DEFAULT_USER is required}:${RABBITMQ_DEFAULT_PASS:?RABBITMQ_DEFAULT_PASS is required}@rabbitmq:5672
+      JSON_BODY_LIMIT: ${JSON_BODY_LIMIT:-1mb}
+    depends_on:
+      rabbitmq:
+        condition: service_started
+
+secrets:
+  gcs_key:
+    file: ${GCS_KEY_FILE:?GCS_KEY_FILE is required}

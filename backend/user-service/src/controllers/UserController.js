@@ -1,0 +1,248 @@
+const userService = require('../services/UserService');
+const User = require('../models/User');
+const Follow = require('../models/Follow');
+const sequelize = require('../config/database');
+const { Op } = require('sequelize');
+const uploadToGCS = require('../utils/gcsUpload');
+const { publishToQueue } = require('../config/rabbitmq');
+
+class UserController {
+  async search(req, res) {
+    try {
+      const { q } = req.query;
+      if (!q) return res.status(200).json({ success: true, data: [] });
+
+      const users = await User.findAll({
+        where: {
+          [Op.or]: [
+            { username: { [Op.iLike]: `%${q}%` } },
+            { email: { [Op.iLike]: `%${q}%` } }
+          ]
+        },
+        attributes: ['id', 'username', 'avatarUrl'],
+        limit: 10
+      });
+
+      res.status(200).json({ success: true, data: users });
+    } catch (error) {
+      console.error("Search Error:", error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async register(req, res) {
+    try {
+      const user = await userService.register(req.body);
+      res.status(201).json({ success: true, data: user });
+    } catch (error) {
+      res.status(400).json({ success: false, message: error.message });
+    }
+  }
+
+  async login(req, res) {
+    try {
+      const result = await userService.login(req.body.email, req.body.password);
+      res.status(200).json({ success: true, data: result });
+    } catch (error) {
+      res.status(401).json({ success: false, message: error.message });
+    }
+  }
+
+  async getProfile(req, res) {
+    try {
+      const targetUserId = req.params.id;
+      const currentUserId = req.headers['x-user-id'];
+
+      const user = await User.findByPk(targetUserId, {
+        attributes: ['id', 'username', 'createdAt', 'avatarUrl', 'coverUrl', 'bio'],
+      });
+
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      const followersCount = await Follow.count({ where: { followingId: targetUserId } });
+      const followingCount = await Follow.count({ where: { followerId: targetUserId } });
+
+      let isFollowing = false;
+      if (currentUserId) {
+        const followRecord = await Follow.findOne({
+          where: {
+            followerId: currentUserId,
+            followingId: targetUserId
+          }
+        });
+        isFollowing = !!followRecord;
+      }
+
+      res.status(200).json({
+        success: true,
+        data: {
+          ...user.toJSON(),
+          followersCount,
+          followingCount,
+          isFollowing
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async followUser(req, res) {
+    try {
+      const followerId = req.headers['x-user-id'];
+      const followingId = req.params.id;
+
+      if (!followerId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      if (followerId == followingId) return res.status(400).json({ success: false, message: 'Cannot follow yourself' });
+
+      const existingFollow = await Follow.findOne({ where: { followerId, followingId } });
+      if (existingFollow) {
+        return res.status(400).json({ success: false, message: 'Already following' });
+      }
+
+      await Follow.create({ followerId, followingId });
+
+      // Notification Logic
+      try {
+         await publishToQueue({
+           type: 'USER_FOLLOWED',
+           recipientId: followingId,
+           senderId: followerId
+         });
+      } catch (err) {
+        console.error("Failed to publish notification (check rabbitmq config)", err.message);
+      }
+
+      res.status(200).json({ success: true, message: 'Followed successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async unfollowUser(req, res) {
+    try {
+      const followerId = req.headers['x-user-id'];
+      const followingId = req.params.id;
+
+      if (!followerId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+      const deleted = await Follow.destroy({ where: { followerId, followingId } });
+      
+      if (deleted) {
+        res.status(200).json({ success: true, message: 'Unfollowed successfully' });
+      } else {
+        res.status(400).json({ success: false, message: 'Not following' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async getFollowingIds(req, res) {
+    try {
+      const currentUserId = req.headers['x-user-id'];
+      if (!currentUserId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+      const follows = await Follow.findAll({
+        where: { followerId: currentUserId },
+        attributes: ['followingId']
+      });
+
+      const ids = follows.map(f => f.followingId);
+      res.status(200).json({ success: true, data: ids });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async getUsersByIds(req, res) {
+    try {
+      const { ids } = req.query;
+      if (!ids) return res.status(200).json({ success: true, data: [] });
+
+      const idList = ids.split(',').map(id => parseInt(id));
+      
+      const users = await User.findAll({
+        where: {
+          id: {
+            [Op.in]: idList
+          }
+        },
+        attributes: ['id', 'username', 'avatarUrl']
+      });
+
+      res.status(200).json({ success: true, data: users });
+    } catch (error) {
+      console.error("Batch User Fetch Error:", error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async updateProfile(req, res) {
+    try {
+      const userId = req.headers['x-user-id'];
+      if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+      const { bio } = req.body;
+      const updates = {};
+      if (bio !== undefined) updates.bio = bio;
+
+      if (req.files) {
+        if (req.files.avatar) {
+          try {
+            updates.avatarUrl = await uploadToGCS(req.files.avatar[0]);
+          } catch (err) {
+            console.error("Avatar upload failed:", err);
+          }
+        }
+        if (req.files.cover) {
+          try {
+             updates.coverUrl = await uploadToGCS(req.files.cover[0]);
+          } catch (err) {
+            console.error("Cover upload failed:", err);
+          }
+        }
+      }
+
+      await User.update(updates, { where: { id: userId } });
+      const updatedUser = await User.findByPk(userId, {
+        attributes: ['id', 'username', 'email', 'avatarUrl', 'coverUrl', 'bio']
+      });
+
+      res.status(200).json({ success: true, data: updatedUser });
+    } catch (error) {
+      console.error("Update Profile Error:", error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  async changePassword(req, res) {
+    try {
+      const userId = req.headers['x-user-id'];
+      const { oldPassword, newPassword } = req.body;
+
+      if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      if (!oldPassword || !newPassword) {
+        return res.status(400).json({ success: false, message: 'Both old and new passwords are required' });
+      }
+
+      await userService.changePassword(userId, oldPassword, newPassword);
+      res.status(200).json({ success: true, message: 'Password updated successfully' });
+    } catch (error) {
+      console.error("Change Password Error:", error);
+      // Distinguish between 400 (bad password) and 500
+      if (error.message === 'Incorrect old password') {
+        return res.status(400).json({ success: false, message: error.message });
+      }
+      res.status(500).json({ success: false, message: error.message });
+    }
+  }
+}
+
+module.exports = new UserController();

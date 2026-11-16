@@ -1,0 +1,71 @@
+const userRepository = require('../repositories/UserRepository');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const getJwtSecret = () => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('Missing required environment variable: JWT_SECRET');
+  }
+  return process.env.JWT_SECRET;
+};
+
+class UserService {
+  async register(data) {
+    if (!data.email || !data.password || !data.username) {
+      throw new Error('Username, email, and password are required');
+    }
+
+    const email = data.email.trim();
+    const existingUser = await userRepository.findByEmail(email);
+    if (existingUser) {
+      throw new Error('Email already exists');
+    }
+
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    const user = await userRepository.create({
+      ...data,
+      email, // Use trimmed email
+      password: hashedPassword
+    });
+
+    // Remove password from return object
+    const { password, ...userWithoutPassword } = user.toJSON();
+    return userWithoutPassword;
+  }
+
+  async login(email, password) {
+    if (!email || !password) {
+      throw new Error('Invalid email or password');
+    }
+
+    const cleanEmail = email.trim();
+    const user = await userRepository.findByEmail(cleanEmail);
+    if (!user) throw new Error('Invalid email or password');
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw new Error('Invalid email or password');
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      getJwtSecret(),
+      { expiresIn: '24h' }
+    );
+
+    return { token, user: { id: user.id, username: user.username } };
+  }
+
+  async changePassword(userId, oldPassword, newPassword) {
+    const user = await userRepository.findByIdWithPassword(userId);
+    if (!user) throw new Error('User not found');
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) throw new Error('Incorrect old password');
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await userRepository.update(userId, { password: hashedPassword });
+
+    return true;
+  }
+}
+
+module.exports = new UserService();

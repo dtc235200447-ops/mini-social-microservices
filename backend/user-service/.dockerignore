@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log*
+.env
+.env.*
+!.env.example
+gcs-key.json
+google-credentials.json
+service-account*.json
+.git
