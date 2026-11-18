@@ -67,11 +67,22 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
+    const payload = {
+      email: email.trim().toLowerCase(),
+      password,
+    };
     try {
-      const response = await axiosClient.post('/users/login', {
-        email: email.trim().toLowerCase(),
-        password,
-      });
+      let response;
+      try {
+        response = await axiosClient.post('/users/login', payload);
+      } catch (firstError) {
+        if (!firstError.response) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+          response = await axiosClient.post('/users/login', payload);
+        } else {
+          throw firstError;
+        }
+      }
       
       if (response.data && response.data.success) {
         const { token, user: basicUser } = response.data.data; 
@@ -99,12 +110,23 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (username, password, email) => {
+    const payload = {
+      username: username.trim(),
+      password,
+      email: email.trim().toLowerCase(),
+    };
     try {
-      await axiosClient.post('/users/register', {
-        username: username.trim(),
-        password,
-        email: email.trim().toLowerCase(),
-      });
+      let response;
+      try {
+        response = await axiosClient.post('/users/register', payload);
+      } catch (firstError) {
+        if (!firstError.response) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+          response = await axiosClient.post('/users/register', payload);
+        } else {
+          throw firstError;
+        }
+      }
       return { success: true };
     } catch (error) {
       const status = error.response?.status;

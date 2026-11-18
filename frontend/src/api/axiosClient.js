@@ -1,12 +1,19 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const isVercelHost = window.location.hostname === 'mini-social-microservices.vercel.app';
+const API_BASE_URL = isLocalHost
+  ? 'http://localhost:3000/api'
+  : isVercelHost
+    ? 'https://skins-drivers-lace-flashing.trycloudflare.com/api'
+    : (import.meta.env.VITE_API_BASE_URL || `${window.location.origin}/api`);
 
 const axiosClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 15000,
 });
 
 // Add a request interceptor
