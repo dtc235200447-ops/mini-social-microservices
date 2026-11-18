@@ -27,14 +27,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-slate-950">
+    <div className="min-h-screen w-full flex bg-pink-50">
       
       {/* Left Panel - Branding (Desktop Only) */}
-      <div className="hidden md:flex w-1/2 bg-slate-900 relative overflow-hidden flex-col justify-center items-center p-12 text-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20" />
+      <div className="hidden md:flex w-1/2 bg-pink-100 relative overflow-hidden flex-col justify-center items-center p-12 text-center border-r border-pink-200">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-200/60 via-rose-100/50 to-pink-100/80" />
         <div className="relative z-10 max-w-lg">
-          <h1 className="text-5xl font-bold text-white mb-6">OmniSocial</h1>
-          <p className="text-slate-400 text-lg leading-relaxed">
+          <h1 className="text-5xl font-bold text-pink-900 mb-6">Vibe Mini</h1>
+          <p className="text-pink-700 text-lg leading-relaxed">
             Connect deeper. Share faster. <br/>
             Experience the next generation of social networking.
           </p>
@@ -42,19 +42,19 @@ const Login = () => {
       </div>
 
       {/* Right Panel - Form */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-6 md:p-12">
+      <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-6 md:p-12 bg-pink-50/50">
         <motion.div 
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="w-full max-w-sm space-y-8"
+          className="w-full max-w-sm space-y-8 bg-white p-8 rounded-2xl shadow-lg shadow-pink-200/50 border border-pink-100"
         >
           <div className="text-center md:text-left">
-             <h2 className="text-3xl font-bold text-white mb-2">Welcome back</h2>
-             <p className="text-slate-400">Please enter your details to sign in.</p>
+             <h2 className="text-3xl font-bold text-pink-950 mb-2">Welcome back</h2>
+             <p className="text-pink-600/80">Please enter your details to sign in.</p>
           </div>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg text-sm text-center font-medium">
+            <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg text-sm text-center font-medium">
                {error}
             </div>
           )}
@@ -79,7 +79,7 @@ const Login = () => {
                 required
               />
               <div className="flex justify-end pt-1">
-                <Link to="#" className="text-xs text-blue-400 hover:text-blue-300 font-medium">
+                <Link to="#" className="text-xs text-pink-500 hover:text-pink-600 font-medium">
                   Forgot password?
                 </Link>
               </div>
@@ -90,9 +90,9 @@ const Login = () => {
               disabled={isLoading}
               className="
                 w-full py-3 rounded-lg
-                bg-blue-600 hover:bg-blue-500 active:bg-blue-700
+                bg-pink-400 hover:bg-pink-500 active:bg-pink-600
                 text-white font-semibold text-sm
-                shadow-lg shadow-blue-900/20
+                shadow-lg shadow-pink-300/40
                 transition-all duration-200
                 flex items-center justify-center gap-2
                 disabled:opacity-50 disabled:cursor-not-allowed
@@ -103,9 +103,9 @@ const Login = () => {
             </button>
           </form>
 
-          <p className="text-center text-slate-400 text-sm">
+          <p className="text-center text-gray-500 text-sm">
             Don't have an account?{' '}
-            <Link to="/register" className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">
+            <Link to="/register" className="text-pink-500 font-semibold hover:text-pink-600 transition-colors">
                Sign up for free
             </Link>
           </p>

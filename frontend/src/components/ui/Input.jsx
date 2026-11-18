@@ -12,7 +12,7 @@ const Input = ({
   return (
     <div className="relative w-full">
       {Icon && (
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-pink-400 pointer-events-none">
           <Icon size={20} />
         </div>
       )}
@@ -26,22 +26,22 @@ const Input = ({
         placeholder={placeholder}
         className={`
           w-full 
-          bg-slate-900 
-          border border-slate-700 
+          bg-white 
+          border border-pink-200 
           rounded-lg 
           py-3 
-          text-white 
-          placeholder:text-slate-500 
+          text-slate-800 
+          placeholder:text-pink-300 
           text-sm font-medium
           ${Icon ? 'pl-10' : 'pl-4'} 
           pr-4
           outline-none 
           transition-all 
           duration-200
-          focus:border-blue-500 
+          focus:border-pink-400 
           focus:ring-2 
-          focus:ring-blue-500/20
-          hover:border-slate-600
+          focus:ring-pink-400/20
+          hover:border-pink-300
         `}
       />
     </div>

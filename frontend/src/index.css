@@ -5,20 +5,20 @@
 @tailwind utilities;
 
 body {
-  @apply bg-slate-950 text-white antialiased font-sans;
+  @apply bg-pink-50 text-slate-800 antialiased font-sans;
 }
 
-/* Custom Scrollbar for modern look */
+/* Custom Scrollbar tông hồng nhạt */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f172a; 
+  background: #fdf2f8; /* hồng cực nhạt (pink-50) */
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155; 
+  background: #f9a8d4; /* hồng pastel (pink-300) */
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569; 
+  background: #f472b6; /* hồng đậm hơn khi di chuột (pink-400) */
 }

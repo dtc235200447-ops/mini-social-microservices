@@ -10,10 +10,6 @@ const Explore = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Simple debounce could be added here, but for now we'll search on Enter or button click 
-  // to avoid too many requests while typing, or just use a small timeout.
-  // Let's do a live search with debounce effect.
-  
   useEffect(() => {
     const delayDebounceFn = setTimeout(async () => {
       if (query.trim()) {
@@ -64,25 +60,25 @@ const Explore = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-white/40">
       {/* Sticky Search Header */}
-      <div className="sticky top-0 z-10 bg-slate-950/80 backdrop-blur-md border-b border-white/5 px-4 py-3">
+      <div className="sticky top-0 z-10 bg-pink-50/80 backdrop-blur-md border-b border-pink-200/70 px-4 py-3">
         <div className="flex items-center gap-4">
           {/* Back Button (Mobile friendly) */}
           <button 
             onClick={handleBack}
-            className="xl:hidden p-2 rounded-full hover:bg-white/10 transition-colors text-white"
+            className="xl:hidden p-2 rounded-full hover:bg-pink-100 transition-colors text-pink-900"
           >
             <ArrowLeft size={20} />
           </button>
 
           <div className="relative flex-1">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-slate-500" />
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-pink-400" />
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-3 bg-slate-900 border border-white/10 rounded-full leading-5 text-slate-300 placeholder-slate-500 focus:outline-none focus:bg-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm transition-colors"
+              className="block w-full pl-11 pr-4 py-3 bg-white border border-pink-200 rounded-full leading-5 text-slate-800 placeholder-pink-300 focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 sm:text-sm transition-all shadow-sm"
               placeholder="Search for posts, topics..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -96,19 +92,19 @@ const Explore = () => {
       <div className="pb-20">
         {loading ? (
            <div className="flex justify-center py-10">
-             <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+             <div className="w-8 h-8 border-4 border-pink-400 border-t-transparent rounded-full animate-spin"></div>
            </div>
         ) : query && posts.length === 0 ? (
            <div className="text-center py-20 px-4">
-             <p className="text-slate-500 text-lg">No results found for "{query}"</p>
+             <p className="text-pink-600/70 text-lg">No results found for "{query}"</p>
            </div>
         ) : !query ? (
            <div className="text-center py-20 px-4">
-             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 text-slate-600 mb-4">
+             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-pink-100 text-pink-500 mb-4 shadow-sm">
                <Search size={32} />
              </div>
-             <h3 className="text-white text-lg font-bold mb-2">Explore OmniSocial</h3>
-             <p className="text-slate-500">Search for people, topics, and keywords.</p>
+             <h3 className="text-pink-950 text-lg font-bold mb-2">Explore Vibe Mini</h3>
+             <p className="text-pink-600/80">Search for people, topics, and keywords.</p>
            </div>
         ) : (
           <div>

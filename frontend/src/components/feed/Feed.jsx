@@ -166,37 +166,37 @@ const Feed = () => {
   return (
     <div>
       {/* Sticky Header with Tabs */}
-      <div className="sticky top-0 z-10 bg-slate-950/80 backdrop-blur-md border-b border-white/5">
+      <div className="sticky top-0 z-10 bg-pink-50/80 backdrop-blur-md border-b border-pink-200/70">
         <div className="flex">
           <button 
             onClick={() => setActiveTab('for-you')}
-            className="flex-1 hover:bg-white/5 transition-colors cursor-pointer py-4 text-center relative"
+            className="flex-1 hover:bg-pink-100/70 transition-colors cursor-pointer py-4 text-center relative"
           >
-            <span className={`font-bold text-sm ${activeTab === 'for-you' ? 'text-white' : 'text-slate-500'}`}>
+            <span className={`font-bold text-sm ${activeTab === 'for-you' ? 'text-pink-950' : 'text-pink-600/70'}`}>
               For you
             </span>
             {activeTab === 'for-you' && (
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-blue-500 rounded-full"></div>
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-pink-500 rounded-full"></div>
             )}
           </button>
           <button 
             onClick={() => setActiveTab('following')}
-            className="flex-1 hover:bg-white/5 transition-colors cursor-pointer py-4 text-center relative"
+            className="flex-1 hover:bg-pink-100/70 transition-colors cursor-pointer py-4 text-center relative"
           >
-            <span className={`font-bold text-sm ${activeTab === 'following' ? 'text-white' : 'text-slate-500'}`}>
+            <span className={`font-bold text-sm ${activeTab === 'following' ? 'text-pink-950' : 'text-pink-600/70'}`}>
               Following
             </span>
             {activeTab === 'following' && (
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-blue-500 rounded-full"></div>
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-pink-500 rounded-full"></div>
             )}
           </button>
         </div>
       </div>
 
       {/* Create Post Input */}
-      <div className="p-4 border-b border-white/5">
+      <div className="p-4 border-b border-pink-200/70 bg-white/60">
         <div className="flex gap-4">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex-shrink-0 flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex-shrink-0 flex items-center justify-center text-white font-bold text-sm overflow-hidden shadow-sm">
              {user?.avatarUrl ? (
                <img src={getImageUrl(user.avatarUrl)} alt="User" className="w-full h-full object-cover" />
              ) : (
@@ -205,7 +205,7 @@ const Feed = () => {
           </div>
           <form onSubmit={handleCreatePost} className="flex-1">
             <textarea
-              className="w-full bg-transparent text-xl text-white placeholder:text-slate-500 border-none focus:ring-0 resize-none h-24 p-0"
+              className="w-full bg-transparent text-xl text-slate-800 placeholder:text-pink-300 border-none focus:ring-0 resize-none h-24 p-0 outline-none"
               placeholder="What is happening?!"
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -214,20 +214,20 @@ const Feed = () => {
 
             {/* Image Preview */}
             {previewUrl && (
-              <div className="relative mb-3 w-full rounded-xl overflow-hidden border border-white/10">
+              <div className="relative mb-3 w-full rounded-xl overflow-hidden border border-pink-200">
                 <img src={previewUrl} alt="Preview" className="w-full max-h-[300px] object-cover" />
                 <button 
                   type="button"
                   onClick={clearImage}
                   disabled={isPosting}
-                  className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-colors"
+                  className="absolute top-2 right-2 bg-pink-950/60 hover:bg-pink-950/80 text-white p-1 rounded-full transition-colors"
                 >
                   <X size={16} />
                 </button>
               </div>
             )}
 
-            <div className="flex justify-between items-center border-t border-white/10 pt-3">
+            <div className="flex justify-between items-center border-t border-pink-100 pt-3">
               <div>
                 <input 
                   type="file" 
@@ -241,7 +241,7 @@ const Feed = () => {
                   type="button" 
                   onClick={() => fileInputRef.current.click()}
                   disabled={isPosting}
-                  className={`text-blue-400 p-2 rounded-full transition-colors ${isPosting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-500/10'}`}
+                  className={`text-pink-500 p-2 rounded-full transition-colors ${isPosting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-pink-100'}`}
                 >
                   <Image size={20} />
                 </button>
@@ -250,7 +250,7 @@ const Feed = () => {
               <button 
                 type="submit" 
                 disabled={(!content.trim() && !selectedImage) || isPosting}
-                className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:hover:bg-blue-600 text-white font-bold px-5 py-1.5 rounded-full text-sm transition-all"
+                className="bg-pink-400 hover:bg-pink-500 disabled:opacity-50 disabled:hover:bg-pink-400 text-white font-bold px-5 py-1.5 rounded-full text-sm transition-all shadow-sm shadow-pink-300/40"
               >
                 {isPosting ? 'Posting...' : 'Post'}
               </button>
@@ -263,10 +263,10 @@ const Feed = () => {
       <div>
         {loading ? (
            <div className="flex justify-center py-10">
-             <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+             <div className="w-8 h-8 border-4 border-pink-400 border-t-transparent rounded-full animate-spin"></div>
            </div>
         ) : posts.length === 0 ? (
-           <div className="text-center py-10 text-slate-500">
+           <div className="text-center py-10 text-pink-600/70">
              {activeTab === 'following' 
                ? "You aren't following anyone yet (or they haven't posted)." 
                : "No posts yet. Be the first to share something!"}

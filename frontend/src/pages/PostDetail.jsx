@@ -16,7 +16,7 @@ const PostDetail = () => {
   useEffect(() => {
     const fetchPost = async () => {
       setLoading(true);
-      setError(null); // Reset error on new fetch
+      setError(null);
       try {
         // 1. Fetch Post Data
         const res = await axiosClient.get(`/posts/${postId}`);
@@ -27,7 +27,6 @@ const PostDetail = () => {
         }
 
         // 2. Fetch Author Data
-        // We default to a placeholder if the user fetch fails
         let author = { username: 'Unknown', avatarUrl: null };
         try {
             if (postData.userId) {
@@ -38,7 +37,6 @@ const PostDetail = () => {
             }
         } catch (userErr) {
           console.error("Failed to fetch author details", userErr);
-          // Fallback author is already set
         }
 
         // 3. Enrich and Set Post
@@ -64,14 +62,13 @@ const PostDetail = () => {
   };
 
   const handleDeletePost = () => {
-    // If deleted from detail view, go back to feed
     navigate('/');
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64 w-full">
-        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-pink-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -79,14 +76,14 @@ const PostDetail = () => {
   if (error || !post) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center p-4">
-        <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center mb-4">
-            <ArrowLeft className="text-red-500" size={24} />
+        <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center mb-4">
+            <ArrowLeft className="text-rose-500" size={24} />
         </div>
-        <h2 className="text-xl font-bold text-white mb-2">Page Not Found</h2>
-        <p className="text-slate-400 mb-6">{error || "The post you are looking for does not exist."}</p>
+        <h2 className="text-xl font-bold text-pink-950 mb-2">Page Not Found</h2>
+        <p className="text-slate-600 mb-6">{error || "The post you are looking for does not exist."}</p>
         <button 
           onClick={() => navigate('/')}
-          className="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-full transition-colors font-medium"
+          className="px-6 py-2 bg-pink-400 hover:bg-pink-500 text-white rounded-full transition-colors font-medium shadow-md shadow-pink-300/40"
         >
           Go back home
         </button>
@@ -95,16 +92,16 @@ const PostDetail = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-white/40">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-slate-950/80 backdrop-blur-md border-b border-white/5 px-4 py-3 flex items-center gap-4">
+      <div className="sticky top-0 z-10 bg-pink-50/80 backdrop-blur-md border-b border-pink-200/70 px-4 py-3 flex items-center gap-4">
         <button 
           onClick={handleBack}
-          className="p-2 rounded-full hover:bg-white/10 transition-colors text-white"
+          className="p-2 rounded-full hover:bg-pink-100 transition-colors text-pink-900"
         >
           <ArrowLeft size={20} />
         </button>
-        <h1 className="text-xl font-bold text-white">Post</h1>
+        <h1 className="text-xl font-bold text-pink-950">Post</h1>
       </div>
 
       {/* Content */}

@@ -4,7 +4,7 @@ import RightPanel from './RightPanel';
 
 const Layout = ({ children }) => {
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-pink-50 text-slate-800">
       <div className="container mx-auto max-w-7xl flex">
         {/* Left Sidebar (Fixed width) */}
         <div className="w-[80px] xl:w-[280px] flex-shrink-0">
@@ -12,7 +12,7 @@ const Layout = ({ children }) => {
         </div>
 
         {/* Main Feed (Flexible width) */}
-        <main className="flex-1 min-w-0 border-r border-white/5">
+        <main className="flex-1 min-w-0 border-x border-pink-200/70 bg-white/40">
           {children}
         </main>
 

@@ -49,25 +49,25 @@ const Settings = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto pt-8 px-4">
-      <h1 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-        <Lock className="text-blue-500" />
+    <div className="max-w-2xl mx-auto pt-8 px-4 min-h-screen">
+      <h1 className="text-2xl font-bold text-pink-950 mb-6 flex items-center gap-2">
+        <Lock className="text-pink-500" />
         Security Settings
       </h1>
 
-      <div className="bg-slate-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Change Password</h2>
+      <div className="bg-white/90 backdrop-blur-md border border-pink-200/80 rounded-2xl p-6 shadow-lg shadow-pink-200/30">
+        <h2 className="text-lg font-semibold text-pink-900 mb-4">Change Password</h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Current Password */}
           <div>
-            <label className="block text-slate-400 text-sm mb-1">Current Password</label>
+            <label className="block text-pink-800/80 font-medium text-sm mb-1">Current Password</label>
             <input 
               type="password"
               name="oldPassword"
               value={passwords.oldPassword}
               onChange={handleChange}
-              className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              className="w-full bg-pink-50/50 border border-pink-200 rounded-xl px-4 py-3 text-slate-800 placeholder:text-pink-300 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 outline-none transition-all"
               placeholder="Enter current password"
               required
             />
@@ -75,13 +75,13 @@ const Settings = () => {
 
           {/* New Password */}
           <div>
-            <label className="block text-slate-400 text-sm mb-1">New Password</label>
+            <label className="block text-pink-800/80 font-medium text-sm mb-1">New Password</label>
             <input 
               type="password"
               name="newPassword"
               value={passwords.newPassword}
               onChange={handleChange}
-              className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              className="w-full bg-pink-50/50 border border-pink-200 rounded-xl px-4 py-3 text-slate-800 placeholder:text-pink-300 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 outline-none transition-all"
               placeholder="Enter new password"
               required
             />
@@ -89,13 +89,13 @@ const Settings = () => {
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-slate-400 text-sm mb-1">Confirm New Password</label>
+            <label className="block text-pink-800/80 font-medium text-sm mb-1">Confirm New Password</label>
             <input 
               type="password"
               name="confirmPassword"
               value={passwords.confirmPassword}
               onChange={handleChange}
-              className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              className="w-full bg-pink-50/50 border border-pink-200 rounded-xl px-4 py-3 text-slate-800 placeholder:text-pink-300 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 outline-none transition-all"
               placeholder="Confirm new password"
               required
             />
@@ -105,11 +105,11 @@ const Settings = () => {
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-full font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-900/20"
+              className="flex items-center gap-2 bg-pink-400 hover:bg-pink-500 active:bg-pink-600 text-white px-6 py-2.5 rounded-full font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-pink-300/40"
             >
               {loading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   Saving...
                 </>
               ) : (

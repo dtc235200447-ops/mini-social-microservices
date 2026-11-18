@@ -10,11 +10,13 @@ const SidebarItem = ({ icon: Icon, text, to, active, onClick, isDanger }) => (
     onClick={onClick}
     className={`
       flex items-center gap-4 p-3 rounded-xl transition-all duration-200 group
-      ${active ? 'bg-white/10 text-white font-bold' : 'text-slate-400 hover:bg-white/5 hover:text-white'}
-      ${isDanger ? 'text-red-400 hover:bg-red-500/10 hover:text-red-400' : ''}
+      ${active 
+        ? 'bg-pink-200/70 text-pink-900 font-bold shadow-sm' 
+        : 'text-slate-600 hover:bg-pink-100/80 hover:text-pink-800'}
+      ${isDanger ? 'text-rose-500 hover:bg-rose-100/80 hover:text-rose-600' : ''}
     `}
   >
-    <Icon size={24} />
+    <Icon size={24} className={active ? 'text-pink-600' : ''} />
     <span className="text-lg hidden xl:block">{text}</span>
   </Link>
 );
@@ -24,14 +26,16 @@ const Sidebar = () => {
   const location = useLocation();
 
   return (
-    <div className="h-screen sticky top-0 flex flex-col justify-between py-6 px-2 xl:px-4 border-r border-white/5">
+    <div className="h-screen sticky top-0 flex flex-col justify-between py-6 px-2 xl:px-4 border-r border-pink-200/70 bg-pink-50/80">
       <div className="space-y-6">
         {/* Logo */}
         <div className="px-3 mb-8">
-          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 hidden xl:block">
-            OmniSocial
+          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-rose-500 hidden xl:block">
+            Vibe Mini
           </h1>
-          <div className="xl:hidden w-8 h-8 rounded-lg bg-gradient-to-r from-blue-400 to-purple-500" />
+          <div className="xl:hidden w-8 h-8 rounded-lg bg-gradient-to-r from-pink-400 to-rose-400 flex items-center justify-center text-white font-bold text-sm">
+            V
+          </div>
         </div>
 
         {/* Nav Items */}
@@ -49,7 +53,7 @@ const Sidebar = () => {
         </nav>
 
         {/* Post Button */}
-        <button className="w-full bg-blue-600 hover:bg-blue-500 text-white rounded-full p-3 xl:py-3 font-bold shadow-lg shadow-blue-900/20 transition-all mt-4 flex justify-center items-center">
+        <button className="w-full bg-pink-400 hover:bg-pink-500 active:bg-pink-600 text-white rounded-full p-3 xl:py-3 font-bold shadow-lg shadow-pink-300/40 transition-all mt-4 flex justify-center items-center">
           <span className="hidden xl:block">Post</span>
           <span className="xl:hidden">+</span>
         </button>
@@ -57,8 +61,8 @@ const Sidebar = () => {
 
       {/* User & Logout */}
       <div className="space-y-2">
-        <Link to={user ? `/profile/${user.id}` : '#'} className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 cursor-pointer transition-colors">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+        <Link to={user ? `/profile/${user.id}` : '#'} className="flex items-center gap-3 p-3 rounded-xl hover:bg-pink-100/80 cursor-pointer transition-colors">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center text-white font-bold text-sm overflow-hidden shadow-sm">
             {user?.avatarUrl ? (
                <img src={getImageUrl(user.avatarUrl)} alt="User" className="w-full h-full object-cover" />
              ) : (
@@ -66,8 +70,8 @@ const Sidebar = () => {
              )}
           </div>
           <div className="hidden xl:block overflow-hidden">
-            <p className="font-bold text-sm truncate text-white">{user?.username}</p>
-            <p className="text-slate-500 text-xs truncate">@{user?.username}</p>
+            <p className="font-bold text-sm truncate text-slate-800">{user?.username}</p>
+            <p className="text-pink-600/80 text-xs truncate">@{user?.username}</p>
           </div>
         </Link>
         <SidebarItem icon={LogOut} text="Logout" onClick={logout} isDanger />

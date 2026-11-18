@@ -57,33 +57,33 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateSuccess }) => 
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-pink-950/30 backdrop-blur-sm">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-slate-900 border border-white/10 w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl relative"
+          className="bg-white border border-pink-200 w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl shadow-pink-200/50 relative"
         >
           {/* Header */}
-          <div className="flex justify-between items-center p-4 border-b border-white/5">
-            <h2 className="text-xl font-bold text-white">Edit Profile</h2>
-            <button onClick={onClose} className="text-slate-400 hover:text-white">
+          <div className="flex justify-between items-center p-4 border-b border-pink-100">
+            <h2 className="text-xl font-bold text-pink-950">Edit Profile</h2>
+            <button onClick={onClose} className="text-pink-400 hover:text-pink-600 p-1 rounded-full hover:bg-pink-50 transition-colors">
               <X size={24} />
             </button>
           </div>
 
           <form onSubmit={handleSubmit}>
             {/* Cover Image Input */}
-            <div className="h-32 bg-slate-800 relative group cursor-pointer">
+            <div className="h-32 bg-pink-100 relative group cursor-pointer">
               {coverPreview ? (
-                <img src={coverPreview} alt="Cover" className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" />
+                <img src={coverPreview} alt="Cover" className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-slate-500">
+                <div className="w-full h-full flex items-center justify-center text-pink-500/70 font-medium text-sm bg-gradient-to-r from-pink-100 via-rose-100 to-pink-200">
                   <span>No Cover Image</span>
                 </div>
               )}
               <div className="absolute inset-0 flex items-center justify-center">
-                <label className="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full cursor-pointer transition-all">
+                <label className="bg-pink-950/50 hover:bg-pink-950/70 text-white p-2.5 rounded-full cursor-pointer transition-all shadow-md">
                   <Camera size={20} />
                   <input type="file" className="hidden" onChange={handleCoverChange} accept="image/*" />
                 </label>
@@ -92,18 +92,18 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateSuccess }) => 
 
             {/* Avatar Input - Overlapping */}
             <div className="px-6 relative">
-              <div className="-mt-12 w-24 h-24 rounded-full border-4 border-slate-900 relative group">
-                <div className="w-full h-full rounded-full overflow-hidden bg-slate-700">
+              <div className="-mt-12 w-24 h-24 rounded-full border-4 border-white relative group shadow-sm">
+                <div className="w-full h-full rounded-full overflow-hidden bg-pink-100">
                   {avatarPreview ? (
                     <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white font-bold text-2xl">
-                      {currentUser.username[0]}
+                    <div className="w-full h-full flex items-center justify-center text-white font-bold text-2xl bg-gradient-to-br from-pink-400 to-rose-400">
+                      {currentUser.username[0].toUpperCase()}
                     </div>
                   )}
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <label className="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full cursor-pointer">
+                  <label className="bg-pink-950/50 hover:bg-pink-950/70 text-white p-2 rounded-full cursor-pointer">
                     <Camera size={16} />
                     <input type="file" className="hidden" onChange={handleAvatarChange} accept="image/*" />
                   </label>
@@ -114,9 +114,9 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateSuccess }) => 
             {/* Fields */}
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-bold text-slate-400 mb-1">Bio</label>
+                <label className="block text-sm font-bold text-pink-900 mb-1">Bio</label>
                 <textarea 
-                  className="w-full bg-black/20 border border-white/10 rounded-xl p-3 text-white focus:border-blue-500 focus:outline-none resize-none h-24"
+                  className="w-full bg-pink-50/50 border border-pink-200 rounded-xl p-3 text-slate-800 placeholder:text-pink-300 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 focus:outline-none resize-none h-24"
                   placeholder="Tell the world about yourself..."
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
@@ -125,11 +125,11 @@ const EditProfileModal = ({ isOpen, onClose, currentUser, onUpdateSuccess }) => 
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-white/5 flex justify-end">
+            <div className="p-4 border-t border-pink-100 flex justify-end bg-pink-50/30">
               <button 
                 type="submit" 
                 disabled={saving}
-                className="bg-white text-black font-bold px-6 py-2 rounded-full hover:bg-slate-200 transition-colors disabled:opacity-50"
+                className="bg-pink-400 hover:bg-pink-500 active:bg-pink-600 text-white font-bold px-6 py-2 rounded-full transition-colors disabled:opacity-50 shadow-md shadow-pink-300/40"
               >
                 {saving ? 'Saving...' : 'Save'}
               </button>

@@ -88,14 +88,14 @@ const PostCard = ({ post, onDelete, defaultShowComments = false }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="p-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors relative"
+        className="p-4 border-b border-pink-200/70 bg-white/70 hover:bg-pink-50/90 transition-colors relative"
       >
         <div className="flex gap-3">
           {/* Avatar */}
           <Link 
             to={`/profile/${post.userId}`} 
             onClick={(e) => e.stopPropagation()}
-            className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-700 to-slate-600 flex-shrink-0 flex items-center justify-center font-bold text-white hover:opacity-80 transition-opacity overflow-hidden"
+            className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex-shrink-0 flex items-center justify-center font-bold text-white hover:opacity-80 transition-opacity overflow-hidden shadow-sm"
           >
             {post.author?.avatarUrl ? (
               <img src={getImageUrl(post.author.avatarUrl)} alt={post.author.username} className="w-full h-full object-cover" />
@@ -108,30 +108,31 @@ const PostCard = ({ post, onDelete, defaultShowComments = false }) => {
           <div className="flex-1 min-w-0">
             {/* Header */}
             <div className="flex justify-between items-start relative">
-                          <div className="flex items-center gap-2">
-                            <Link 
-                              to={`/profile/${post.userId}`}
-                              onClick={(e) => e.stopPropagation()}
-                              className="font-bold text-white hover:underline"
-                            >
-                              {post.author?.username || `User #${post.userId}`}
-                            </Link>
-                            <Link 
-                              to={`/post/${post.id}`}
-                              className="text-slate-500 text-sm hover:text-blue-400 hover:underline"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              · {new Date(post.createdAt).toLocaleDateString()}
-                            </Link>
-                          </div>
-                          
-                          {/* Options Menu */}              <div className="relative" ref={optionsRef}>
+              <div className="flex items-center gap-2">
+                <Link 
+                  to={`/profile/${post.userId}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="font-bold text-slate-900 hover:text-pink-600 hover:underline"
+                >
+                  {post.author?.username || `User #${post.userId}`}
+                </Link>
+                <Link 
+                  to={`/post/${post.id}`}
+                  className="text-pink-600/70 text-sm hover:text-pink-500 hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  · {new Date(post.createdAt).toLocaleDateString()}
+                </Link>
+              </div>
+              
+              {/* Options Menu */}
+              <div className="relative" ref={optionsRef}>
                 <button 
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowOptions(!showOptions);
                   }}
-                  className="text-slate-500 hover:text-blue-400 p-1 rounded-full hover:bg-blue-500/10 transition-colors"
+                  className="text-pink-400 hover:text-pink-600 p-1 rounded-full hover:bg-pink-100 transition-colors"
                 >
                   <MoreHorizontal size={18} />
                 </button>
@@ -142,13 +143,13 @@ const PostCard = ({ post, onDelete, defaultShowComments = false }) => {
                       initial={{ opacity: 0, scale: 0.95, y: -10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                      className="absolute right-0 mt-2 w-40 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-xl z-20 overflow-hidden"
+                      className="absolute right-0 mt-2 w-40 bg-white/95 backdrop-blur-xl border border-pink-200 rounded-xl shadow-xl shadow-pink-200/40 z-20 overflow-hidden"
                     >
                       <button
                         onClick={handleShare}
-                        className="w-full px-4 py-3 text-left text-sm text-slate-300 hover:bg-white/10 flex items-center gap-2 transition-colors"
+                        className="w-full px-4 py-3 text-left text-sm text-slate-700 hover:bg-pink-50 flex items-center gap-2 transition-colors"
                       >
-                        <Copy size={16} />
+                        <Copy size={16} className="text-pink-500" />
                         Copy Link
                       </button>
                       {isOwner && (
@@ -158,7 +159,7 @@ const PostCard = ({ post, onDelete, defaultShowComments = false }) => {
                             setShowOptions(false);
                             setShowDeleteModal(true);
                           }}
-                          className="w-full px-4 py-3 text-left text-sm text-red-400 hover:bg-red-500/10 flex items-center gap-2 transition-colors"
+                          className="w-full px-4 py-3 text-left text-sm text-rose-500 hover:bg-rose-50 flex items-center gap-2 transition-colors"
                         >
                           <Trash2 size={16} />
                           Delete
@@ -171,13 +172,13 @@ const PostCard = ({ post, onDelete, defaultShowComments = false }) => {
             </div>
 
             {/* Body */}
-            <p className="text-slate-200 mt-1 text-[15px] leading-relaxed whitespace-pre-wrap">
+            <p className="text-slate-700 mt-1 text-[15px] leading-relaxed whitespace-pre-wrap">
               {post.content}
             </p>
 
             {/* Image */}
             {post.imageUrl && (
-              <div className="mt-3 rounded-xl overflow-hidden border border-slate-800">
+              <div className="mt-3 rounded-xl overflow-hidden border border-pink-200/80 shadow-sm">
                 <img 
                   src={getImageUrl(post.imageUrl)} 
                   alt="Post attachment" 
@@ -191,9 +192,9 @@ const PostCard = ({ post, onDelete, defaultShowComments = false }) => {
               {/* Reply / Comment */}
               <button 
                 onClick={handleCommentClick}
-                className={`flex items-center gap-2 group transition-colors ${showComments ? 'text-blue-400' : 'hover:text-blue-400'}`}
+                className={`flex items-center gap-2 group transition-colors ${showComments ? 'text-pink-500' : 'hover:text-pink-500'}`}
               >
-                <div className={`p-2 rounded-full ${showComments ? 'bg-blue-500/10' : 'group-hover:bg-blue-500/10'}`}>
+                <div className={`p-2 rounded-full ${showComments ? 'bg-pink-100' : 'group-hover:bg-pink-100'}`}>
                   <MessageCircle size={18} />
                 </div>
                 <span className="text-xs">{showComments ? 'Close' : 'Reply'}</span>
@@ -202,9 +203,9 @@ const PostCard = ({ post, onDelete, defaultShowComments = false }) => {
               {/* Like */}
               <button 
                 onClick={handleLike}
-                className={`flex items-center gap-2 group transition-colors ${isLiked ? 'text-pink-500' : 'hover:text-pink-500'}`}
+                className={`flex items-center gap-2 group transition-colors ${isLiked ? 'text-rose-500' : 'hover:text-rose-500'}`}
               >
-                <div className={`p-2 rounded-full ${isLiked ? 'bg-pink-500/10' : 'group-hover:bg-pink-500/10'}`}>
+                <div className={`p-2 rounded-full ${isLiked ? 'bg-rose-100' : 'group-hover:bg-rose-100'}`}>
                   <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
                 </div>
                 <span className={`text-xs ${isLiked ? 'font-bold' : ''}`}>
@@ -215,9 +216,9 @@ const PostCard = ({ post, onDelete, defaultShowComments = false }) => {
               {/* Share (Direct action) */}
               <button 
                 onClick={handleShare}
-                className="flex items-center gap-2 hover:text-green-500 group transition-colors"
+                className="flex items-center gap-2 hover:text-pink-500 group transition-colors"
               >
-                <div className="p-2 rounded-full group-hover:bg-green-500/10">
+                <div className="p-2 rounded-full group-hover:bg-pink-100">
                   <Share2 size={18} />
                 </div>
                 <span className="text-xs">Share</span>
