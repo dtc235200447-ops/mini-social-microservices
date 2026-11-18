@@ -4,7 +4,7 @@
 > Tác giả: Dương Thị Hoài Linh
 
 ## 📄 Báo cáo
-[Báo cáo đồ án](https://docs.google.com/document/d/1tp6U1Whrb6y0G63zJf2P249p3XzsuBPt/edit?usp=sharing&ouid=103131779567105929050&rtpof=true&sd=true)
+[Báo cáo đồ án] https://docs.google.com/documentd191ezCxtTsMP81PjaaI3WpRpdXd2vy4GZU7AqzDdVwhw/edit?tab=t.0
 
 ## 📖 Giới thiệu
 **Vibe Mini** là một mạng xã hội thu nhỏ được xây dựng dựa trên kiến trúc **Microservices**. Dự án tập trung vào việc áp dụng các kỹ thuật lập trình phân tán, xử lý bất đồng bộ qua Message Queue và triển khai container hóa.
@@ -52,3 +52,20 @@ Tạo file cấu hình cục bộ từ template, thay các placeholder bằng gi
 ```bash
 cp .env.example .env
 docker compose --env-file .env up --build
+
+```
+
+## 📁 Cấu trúc thư mục
+
+```text
+.
+├── backend/
+│   ├── api-gateway/      # Cổng vào duy nhất
+│   ├── comment-service/  # Comments management
+│   ├── feed-service/     # News Feed aggregation
+│   ├── notification-service/ # Notifications
+│   ├── post-service/     # Content creation
+│   └── user-service/     # Auth & Profile
+├── frontend/             # React Application (Vibe Mini UI)
+└── docker-compose.yml    # Orchestration config
+```

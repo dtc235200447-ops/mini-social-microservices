@@ -14,8 +14,10 @@ import Explore from './pages/Explore';
 import Settings from './pages/Settings';
 
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useContext(AuthContext);
-  if (loading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Loading...</div>;
+  const auth = useContext(AuthContext);
+  const user = auth?.user;
+  const loading = auth?.loading ?? true;
+  if (loading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">Đang tải...</div>;
   if (!user) return <Navigate to="/login" replace />;
   
   // Wrap protected content in Layout

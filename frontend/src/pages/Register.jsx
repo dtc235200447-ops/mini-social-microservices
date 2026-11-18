@@ -22,7 +22,7 @@ const Register = () => {
     setIsLoading(false);
     
     if (result.success) {
-      navigate('/login');
+      navigate('/login', { state: { registered: true } });
     } else {
       setError(result.error);
     }
@@ -35,9 +35,9 @@ const Register = () => {
       <div className="hidden md:flex w-1/2 bg-pink-100 relative overflow-hidden flex-col justify-center items-center p-12 text-center border-r border-pink-200">
         <div className="absolute inset-0 bg-gradient-to-bl from-rose-100/60 via-pink-200/50 to-pink-100/80" />
         <div className="relative z-10 max-w-lg">
-          <h1 className="text-5xl font-bold text-pink-900 mb-6">Join Vibe Mini</h1>
+          <h1 className="text-5xl font-bold text-pink-900 mb-6">Tham gia Vibe Mini</h1>
           <p className="text-pink-700 text-lg leading-relaxed">
-            Create an account and start building your network today.
+            Tạo tài khoản và bắt đầu kết nối với cộng đồng ngay hôm nay.
           </p>
         </div>
       </div>
@@ -50,8 +50,8 @@ const Register = () => {
           className="w-full max-w-sm space-y-8 bg-white p-8 rounded-2xl shadow-lg shadow-pink-200/50 border border-pink-100"
         >
           <div className="text-center md:text-left">
-             <h2 className="text-3xl font-bold text-pink-950 mb-2">Create account</h2>
-             <p className="text-pink-600/80">Start your 30-day free trial.</p>
+             <h2 className="text-3xl font-bold text-pink-950 mb-2">Tạo tài khoản</h2>
+             <p className="text-pink-600/80">Điền thông tin để bắt đầu.</p>
           </div>
 
           {error && (
@@ -64,27 +64,32 @@ const Register = () => {
             <Input 
               icon={User}
               type="text"
-              placeholder="Username"
+              placeholder="Tên người dùng"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              minLength={1}
               required
             />
 
             <Input 
               icon={Mail}
               type="email"
-              placeholder="Email address"
+              placeholder="Địa chỉ email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               required
             />
             
             <Input 
               icon={Lock}
               type="password"
-              placeholder="Create a password"
+              placeholder="Tạo mật khẩu"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
+              minLength={6}
               required
             />
             
@@ -101,15 +106,15 @@ const Register = () => {
                 disabled:opacity-50 disabled:cursor-not-allowed
               "
             >
-              {isLoading ? 'Creating account...' : 'Create account'}
+              {isLoading ? 'Đang tạo tài khoản...' : 'Tạo tài khoản'}
               {!isLoading && <ArrowRight size={18} />}
             </button>
           </form>
 
           <p className="text-center text-gray-500 text-sm">
-            Already have an account?{' '}
+            Đã có tài khoản?{' '}
             <Link to="/login" className="text-pink-500 font-semibold hover:text-pink-600 transition-colors">
-               Sign in
+               Đăng nhập
             </Link>
           </p>
         </motion.div>

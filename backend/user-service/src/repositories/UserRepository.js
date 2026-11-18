@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { Op } = require('sequelize');
 
 class UserRepository {
   async create(userData) {
@@ -6,7 +7,9 @@ class UserRepository {
   }
 
   async findByEmail(email) {
-    return await User.findOne({ where: { email } });
+    return await User.findOne({
+      where: { email: { [Op.iLike]: email } }
+    });
   }
 
   async findById(id) {

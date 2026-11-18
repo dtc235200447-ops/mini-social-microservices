@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import Input from '../components/ui/Input';
@@ -10,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,8 +36,8 @@ const Login = () => {
         <div className="relative z-10 max-w-lg">
           <h1 className="text-5xl font-bold text-pink-900 mb-6">Vibe Mini</h1>
           <p className="text-pink-700 text-lg leading-relaxed">
-            Connect deeper. Share faster. <br/>
-            Experience the next generation of social networking.
+            Kết nối sâu hơn. Chia sẻ nhanh hơn. <br/>
+            Trải nghiệm mạng xã hội thế hệ mới.
           </p>
         </div>
       </div>
@@ -49,8 +50,8 @@ const Login = () => {
           className="w-full max-w-sm space-y-8 bg-white p-8 rounded-2xl shadow-lg shadow-pink-200/50 border border-pink-100"
         >
           <div className="text-center md:text-left">
-             <h2 className="text-3xl font-bold text-pink-950 mb-2">Welcome back</h2>
-             <p className="text-pink-600/80">Please enter your details to sign in.</p>
+             <h2 className="text-3xl font-bold text-pink-950 mb-2">Chào mừng trở lại</h2>
+             <p className="text-pink-600/80">Nhập thông tin để đăng nhập.</p>
           </div>
 
           {error && (
@@ -58,14 +59,20 @@ const Login = () => {
                {error}
             </div>
           )}
+          {location.state?.registered && (
+            <div className="bg-green-50 border border-green-200 text-green-700 p-3 rounded-lg text-sm text-center font-medium">
+              Đăng ký thành công. Hãy đăng nhập.
+            </div>
+          )}
           
           <form onSubmit={handleSubmit} className="space-y-5">
             <Input 
               icon={Mail}
               type="email"
-              placeholder="Email address"
+              placeholder="Địa chỉ email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               required
             />
             
@@ -73,14 +80,15 @@ const Login = () => {
               <Input 
                 icon={Lock}
                 type="password"
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
                 required
               />
               <div className="flex justify-end pt-1">
                 <Link to="#" className="text-xs text-pink-500 hover:text-pink-600 font-medium">
-                  Forgot password?
+                  Quên mật khẩu?
                 </Link>
               </div>
             </div>
@@ -98,15 +106,15 @@ const Login = () => {
                 disabled:opacity-50 disabled:cursor-not-allowed
               "
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
               {!isLoading && <ArrowRight size={18} />}
             </button>
           </form>
 
           <p className="text-center text-gray-500 text-sm">
-            Don't have an account?{' '}
+            Chưa có tài khoản?{' '}
             <Link to="/register" className="text-pink-500 font-semibold hover:text-pink-600 transition-colors">
-               Sign up for free
+               Đăng ký miễn phí
             </Link>
           </p>
         </motion.div>

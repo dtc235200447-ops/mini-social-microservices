@@ -18,6 +18,11 @@ services:
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173}
+      USER_SERVICE_URL: http://user-service:3001
+      POST_SERVICE_URL: http://post-service:3002
+      COMMENT_SERVICE_URL: http://comment-service:3003
+      NOTIFICATION_SERVICE_URL: http://notification-service:3005
+      FEED_SERVICE_URL: http://feed-service:3004
     depends_on:
       - user-service
       - post-service
@@ -132,3 +137,8 @@ services:
 secrets:
   gcs_key:
     file: ${GCS_KEY_FILE:?GCS_KEY_FILE is required}
+
+networks:
+  default:
+    name: my_minisocial_project_default
+    external: true

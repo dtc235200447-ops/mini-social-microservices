@@ -7,9 +7,14 @@ const SocketContext = createContext();
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000';
 
 export const SocketProvider = ({ children }) => {
-  const { user } = useContext(AuthContext);
+  const auth = useContext(AuthContext);
+  const user = auth?.user;
 
   useEffect(() => {
+    if (!import.meta.env.VITE_ENABLE_SOCKET) {
+      return undefined;
+    }
+
     const token = localStorage.getItem('token');
     
     if (user && token) {

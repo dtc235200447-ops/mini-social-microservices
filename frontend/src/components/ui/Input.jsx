@@ -7,7 +7,9 @@ const Input = ({
   value, 
   onChange, 
   name,
-  required = false 
+  required = false,
+  autoComplete,
+  minLength
 }) => {
   return (
     <div className="relative w-full">
@@ -23,6 +25,8 @@ const Input = ({
         value={value}
         onChange={onChange}
         required={required}
+        autoComplete={autoComplete}
+        minLength={minLength}
         placeholder={placeholder}
         className={`
           w-full 

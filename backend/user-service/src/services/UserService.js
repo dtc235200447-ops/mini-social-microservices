@@ -12,19 +12,30 @@ const getJwtSecret = () => {
 class UserService {
   async register(data) {
     if (!data.email || !data.password || !data.username) {
-      throw new Error('Username, email, and password are required');
+      throw new Error('Vui lòng nhập đầy đủ tên người dùng, email và mật khẩu');
     }
 
-    const email = data.email.trim();
+    const email = data.email.trim().toLowerCase();
+    const username = data.username.trim();
+    if (!username) {
+      throw new Error('Tên người dùng không được để trống');
+    }
+    if (data.password.length < 6) {
+      throw new Error('Mật khẩu phải có ít nhất 6 ký tự');
+    }
+
     const existingUser = await userRepository.findByEmail(email);
     if (existingUser) {
-      throw new Error('Email already exists');
+      const error = new Error('Email này đã được đăng ký');
+      error.code = 'EMAIL_EXISTS';
+      throw error;
     }
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = await userRepository.create({
       ...data,
-      email, // Use trimmed email
+      username,
+      email,
       password: hashedPassword
     });
 
@@ -35,18 +46,18 @@ class UserService {
 
   async login(email, password) {
     if (!email || !password) {
-      throw new Error('Invalid email or password');
+      throw new Error('Email hoặc mật khẩu không đúng');
     }
 
-    const cleanEmail = email.trim();
+    const cleanEmail = email.trim().toLowerCase();
     const user = await userRepository.findByEmail(cleanEmail);
-    if (!user) throw new Error('Invalid email or password');
+    if (!user) throw new Error('Email hoặc mật khẩu không đúng');
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new Error('Invalid email or password');
+    if (!isMatch) throw new Error('Email hoặc mật khẩu không đúng');
 
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, username: user.username },
       getJwtSecret(),
       { expiresIn: '24h' }
     );

@@ -12,11 +12,13 @@ const USER_SERVICE_URL = process.env.USER_SERVICE_URL || 'http://user-service:30
 const POST_SERVICE_URL = process.env.POST_SERVICE_URL || 'http://post-service:3002';
 const COMMENT_SERVICE_URL = process.env.COMMENT_SERVICE_URL || 'http://comment-service:3003';
 const NOTIFICATION_SERVICE_URL = process.env.NOTIFICATION_SERVICE_URL || 'http://notification-service:3005';
+const SOCKET_PROXY_ENABLED = Boolean(process.env.NOTIFICATION_SERVICE_URL);
 const FEED_SERVICE_URL = process.env.FEED_SERVICE_URL || 'http://feed-service:3004';
 
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   ...(process.env.CORS_ORIGINS || 'http://localhost:5173').split(','),
+  'https://mini-social-microservices.vercel.app',
 ].map((origin) => origin && origin.trim()).filter(Boolean);
 
 app.use(cors({ 
@@ -32,12 +34,18 @@ app.use(cors({
   credentials: true 
 }));
 
+app.get('/health', (req, res) => {
+  res.status(200).json({ success: true, service: 'api-gateway' });
+});
+
 // WebSocket Proxy (Socket.io)
-app.use('/socket.io', createProxyMiddleware({
-  target: NOTIFICATION_SERVICE_URL,
-  changeOrigin: true,
-  ws: true, // Enable WebSocket support
-}));
+if (SOCKET_PROXY_ENABLED) {
+  app.use('/socket.io', createProxyMiddleware({
+    target: NOTIFICATION_SERVICE_URL,
+    changeOrigin: true,
+    ws: true,
+  }));
+}
 
 // Public Routes
 app.use(['/api/users/login', '/api/users/register'], createProxyMiddleware({
